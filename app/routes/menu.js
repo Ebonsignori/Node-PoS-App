@@ -14,7 +14,7 @@ router.get("/", async function returnMenu(req, res) {
 // Add a new item to the menu TODO: Test and improve cases
 router.post("/add", async function addMenuItem(req, res) {
     try {
-        const insert_res = await db.query(queries.menu.new_item, [
+        const insert_res = await db.query(queries.menu.add_item, [
             req.query.item_name,
             req.query.price,
             req.query.category,

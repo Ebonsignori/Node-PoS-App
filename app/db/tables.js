@@ -5,7 +5,7 @@ module.exports = {
            id SERIAL PRIMARY KEY,
            item_name text NOT NULL,
            item_price integer NOT NULL,
-           category category NOT NULL,
+           category menu_category NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
          )`,

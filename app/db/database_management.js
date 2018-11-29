@@ -9,27 +9,25 @@ const config = {
 };
 
 async function createDatabase() {
-    await pgtools.createdb(config, process.env.POSTGRES_DB).catch((err, res) => {
+    try {
+        await pgtools.createdb(config, process.env.POSTGRES_DB)
+    } catch (err) {
         if (err) {
-            logger.error(`Failed to create database: ${process.env.POSTGRES_DB}. Exiting`);
-            logger.error(err);
-            process.exit(-1);
+            throw err;
         }
-        logger.info(`Database: ${process.env.POSTGRES_DB} created.`);
-        logger.debug(res);
-    });
+    }
+    logger.info(`Database: ${process.env.POSTGRES_DB} created.`);
 }
 
 async function dropDatabase() {
-    await pgtools.dropdb(config, process.env.POSTGRES_DB).catch((err, res) => {
+    try {
+        await pgtools.dropdb(config, process.env.POSTGRES_DB)
+    } catch (err) {
         if (err) {
-            logger.error(`Failed to drop database: ${process.env.POSTGRES_DB}. Exiting`);
-            logger.error(err);
-            process.exit(-1);
+            throw err;
         }
-        logger.info(res);
-        logger.debug(`Database: ${process.env.POSTGRES_DB} dropped.`, process.env.POSTGRES_DB);
-    });
+    }
+    logger.debug(`Database: ${process.env.POSTGRES_DB} dropped.`);
 }
 
 module.exports = {

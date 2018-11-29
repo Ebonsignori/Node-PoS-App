@@ -5,9 +5,9 @@ module.exports = {
         get_item:
             "SELECT * FROM menu " +
             "WHERE menu.id = $1",
-        new_item:
+        add_item:
             "INSERT INTO menu(item_name, item_price, category, modified_date, created_date) " +
-            "VALUES($1, $2, $3, $4, $5)",
+            "VALUES($1, $2, $3, $4, $4)",
         remove_item:
             "DELETE FROM menu" +
             "WHERE menu.id = $1",

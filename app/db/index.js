@@ -1,6 +1,7 @@
 const { Pool } = require("pg");
 const database_management = require("./database_management");
 const tables = require("./tables");
+const table_management = require("./table_management");
 const logger = require("../config/logging");
 
 let pool;
@@ -15,13 +16,33 @@ async function initializeDatabase() {
         port: 5432,
     };
 
-    // If database doesn't exist, create it and populate it will tables
+    // If database doesn't exist, create it and populate it with tables
     try {
         pool = new Pool(connection_params);
+        // If database exists and in test environment, drop it then add it
+        if (process.env.NODE_ENV === "testing") {
+            try {
+                await database_management.createDatabase();
+            } catch (err) {
+                try {
+                    await database_management.dropDatabase();
+                    await database_management.createDatabase();
+                } catch (e) {
+                    logger.error(e);
+                    process.exit(1);
+                }
+            }
+            try {
+                await table_management.createOrDropTables(pool, "CREATE");
+            } catch (err) {
+                logger.error("Error creating tables for test environment...");
+                logger.error(err);
+            }
+        }
     } catch (e) {
         await database_management.createDatabase();
         pool = new Pool(connection_params);
-        await tables.createOrDropTables(pool, "CREATE");
+        await table_management.createOrDropTables(pool, "CREATE");
     }
 
     // Listen for database connections
@@ -42,11 +63,16 @@ async function query(text, params) {
             throw err;
         }
     });
-    logger.debug(`Executed query: ${text} :: Query Rows: ${results ? results.rowCount : undefined}`);
+    logger.silly(`Executed query: ${text} :: Query Rows: ${results ? results.rowCount : undefined}`);
     return results;
+}
+
+function closeConnection() {
+    pool.end();
 }
 
 module.exports = {
     initializeDatabase: initializeDatabase,
-    query: query
+    query: query,
+    closeConnection: closeConnection
 };

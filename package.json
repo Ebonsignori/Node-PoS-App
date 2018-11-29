@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node ./app/app.js",
     "start.dev": "nodemon",
+    "start.test": "./node_modules/mocha/bin/mocha",
     "drop_tables": "docker-compose run -e HANDLE_TABLES=DROP backend",
     "create_tables": "docker-compose run -e HANDLE_TABLES=CREATE backend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "docker-compose -f docker-compose-tests.yml up --abort-on-container-exit"
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +25,9 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/express": "^4.16.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.6"
   }
 }

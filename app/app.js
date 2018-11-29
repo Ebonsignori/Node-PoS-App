@@ -24,15 +24,23 @@ async function main() {
     app.use(require("./routes/route_not_found"));
 
     // Start express server
-    const server = app.listen(process.env.HTTP_PORT, function(){
-        logger.info(chalk`
+    app.listen(process.env.HTTP_PORT, () => {
+        if (process.env.NODE_ENV !== "testing") {
+            logger.info(chalk`
                       Backend is up and listening.
                       On port: {magenta.bold ${process.env.HTTP_PORT}}.
                     `);
+        }
     });
 }
 
-main();
+// For testing export main module, otherwise run it
+if (process.env.NODE_ENV === "testing") {
+    module.exports = main;
+} else {
+    main();
+}
+
 // .catch((error) => {
 //     logger.error("FATAL: An uncaught error occurred:");
 //     logger.error(error);
