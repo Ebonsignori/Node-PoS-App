@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  backend:
+    command: ["npm", "run", "start.dev"]
+    environment:
+      NODE_ENV: development
+      LOGGING_LEVEL: silly
+      ALLOWED_ORIGIN: http://localhost:8086
