@@ -13,8 +13,14 @@ before("Database should be created", async function databaseInit() {
     // Start server
     await require("../app/app").main();
 
+    // Populate database with test data (templates)
     try {
-        // Populate database with test data (templates)
+        // First add categories
+        for await (let category of templates.menu_category) {
+            await db.query(queries.menu_category.add_category, [category]);
+        }
+        console.log("Added categories");
+        // Then add menu items
         for await (let menu_item of templates.menu) {
             await db.query(queries.menu.add_item, [
                 menu_item.item_name, menu_item.item_price, menu_item.category, menu_item.created_date
@@ -42,6 +48,7 @@ describe("Testing Database", () => {
 
 /* Load tests here in desired order */
 require("./tests/menu");
+require("./tests/menu_category");
 
 after("Database should be taken down", async function takeDownDatabase() {
     let database_dropped= true;

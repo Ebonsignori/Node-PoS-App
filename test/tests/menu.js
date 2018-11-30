@@ -20,7 +20,7 @@ let bad_new_item = {
 };
 
 describe('Menu', function Menu() {
-    it('it should GET all the menu items', (done) => {
+    it('should GET all the menu items', function getEntireMenu(done) {
         chai.request(app)
             .get('/menu')
             .end((err, res) => {
@@ -31,7 +31,7 @@ describe('Menu', function Menu() {
             });
     });
 
-    it('it should individually GET every individual menu item', async function getEachMenuItem() {
+    it('should individually GET every individual menu item', async function getEachMenuItem() {
         let i = 1;
         for await (const menu_item of templates.menu) {
             const res = await requester.get('/menu/' + i);
@@ -41,11 +41,9 @@ describe('Menu', function Menu() {
             res.body.item_name.should.equal(menu_item.item_name);
             i++;
         }
-
-        return true;
     });
 
-    it('it should POST a new menu item', async function postNewMenuItem() {
+    it('should POST a new menu item', async function postNewMenuItem() {
         const request = await requester.post("/menu").type('form').send(new_item);
         request.should.have.status(200);
         request.body.item_name.should.equal(new_item.item_name);
@@ -55,7 +53,7 @@ describe('Menu', function Menu() {
     });
 
     // Example of using the mocha done() callback instead of async to signal end of async test
-    it('it should fail to POST a new menu item with a bad category name', function postNewMenuItemFail(done) {
+    it('should fail to POST a new menu item with a bad menu_category name', function postNewMenuItemFail(done) {
         this.timeout(2000);
         requester.post("/menu").type('form').send(bad_new_item).then((err, res) => {
             should.exist(err);
@@ -66,7 +64,7 @@ describe('Menu', function Menu() {
         });
     });
 
-    it('it should use PUT to edit an existing item', async function putEditMenuItem() {
+    it('should use PUT to edit an existing item', async function putEditMenuItem() {
         // Use id returned from creation of new item to change its name to Whiskey
         const new_name = "Whiskey";
 
@@ -78,7 +76,7 @@ describe('Menu', function Menu() {
         request.body.item_name.should.equal(new_name);
     });
 
-    it('it should use DELETE to delete an existing item', async function putEditMenuItem() {
+    it('should use DELETE to delete an existing item', async function deleteMenuItem() {
         // Get the number of menu item in the database before deleting
         const request1 = await requester.get("/menu");
         request1.should.have.status(200);

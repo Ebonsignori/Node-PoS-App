@@ -7,20 +7,19 @@ const logger = require("../config/logging");
 // Routes
 // =================================================
 
-// Return entire menu
+// Return entire menu or add a menu item
 router.route("/")
     .get(returnMenu)
     .post(addMenuItem);
 
-// RESTfully perform CRUD operations a specific menu item by its id
+// RESTfully perform RUD operations a specific menu item by its id
 router.route("/:item_id", )
     .get(getSpecificMenuItem)
     .delete(deleteMenuItem)
     .put(editMenuItem);
 
-
 // =================================================
-// Route Logic
+// Menu Route Logic
 // =================================================
 
 // Get every menu entry
@@ -31,37 +30,6 @@ async function returnMenu(req, res) {
     } catch (err) {
         logger.warn(err);
         res.status(500).json({error: "An internal error occurred. Please contact an admin."});
-    }
-}
-
-// Get a specific menu item
-async function getSpecificMenuItem(req, res) {
-    // Validate request
-    if (!Number.isInteger(Number(req.params.item_id))) {
-        return res.status(400).json({
-            error: `Invalid menu item_id: ${req.params.item_id}`,
-            item_id: req.params.item_id
-        });
-    }
-
-    try {
-        const get_res = await db.query(queries.menu.get_item, [
-            req.params.item_id
-        ]);
-        if (get_res && get_res.rows && get_res.rows[0]) {
-            return res.status(200).json(get_res.rows[0]);
-        } else {
-            return res.status(404).json({
-                error: `Item with id: ${req.params.item_id} not found`,
-                item_id: req.params.item_id
-            });
-        }
-    } catch (err) {
-        logger.warn(err);
-        return res.status(404).json({
-            error: `Item with id: ${req.params.item_id} not found`,
-            item_id: req.params.item_id
-        });
     }
 }
 
@@ -102,8 +70,8 @@ async function addMenuItem(req, res) {
     }
 }
 
-// Delete a specific item on the menu using the item's id
-async function deleteMenuItem(req, res) {
+// Get a specific menu item
+async function getSpecificMenuItem(req, res) {
     // Validate request
     if (!Number.isInteger(Number(req.params.item_id))) {
         return res.status(400).json({
@@ -113,11 +81,11 @@ async function deleteMenuItem(req, res) {
     }
 
     try {
-        const delete_res = await db.query(queries.menu.remove_item, [
+        const get_res = await db.query(queries.menu.get_item, [
             req.params.item_id
         ]);
-        if (delete_res && delete_res.rows && delete_res.rows[0]) {
-            return res.status(200).json(delete_res.rows[0]);
+        if (get_res && get_res.rows && get_res.rows[0]) {
+            return res.status(200).json(get_res.rows[0]);
         } else {
             return res.status(404).json({
                 error: `Item with id: ${req.params.item_id} not found`,
@@ -173,6 +141,37 @@ async function editMenuItem(req, res) {
         const edit_res = await db.query(edit_item_query[0], edit_item_query[1]);
         if (edit_res && edit_res.rows && edit_res.rows[0]) {
             return res.status(200).json(edit_res.rows[0]);
+        } else {
+            return res.status(500).json({
+                error: `Something when wrong when trying to edit menu item with item_id: ${req.params.item_id}. Please contact an admin.`,
+                item_id: req.params.item_id
+            });
+        }
+    } catch (err) {
+        logger.warn(err);
+        return res.status(500).json({
+            error: `Something when wrong when trying to edit menu item with item_id: ${req.params.item_id}. Please contact an admin.`,
+            item_id: req.params.item_id
+        });
+    }
+}
+
+// Delete a specific item on the menu using the item's id
+async function deleteMenuItem(req, res) {
+    // Validate request
+    if (!Number.isInteger(Number(req.params.item_id))) {
+        return res.status(400).json({
+            error: `Invalid menu item_id: ${req.params.item_id}`,
+            item_id: req.params.item_id
+        });
+    }
+
+    try {
+        const delete_res = await db.query(queries.menu.remove_item, [
+            req.params.item_id
+        ]);
+        if (delete_res && delete_res.rows && delete_res.rows[0]) {
+            return res.status(200).json(delete_res.rows[0]);
         } else {
             return res.status(404).json({
                 error: `Item with id: ${req.params.item_id} not found`,

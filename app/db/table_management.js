@@ -6,14 +6,14 @@ async function createOrDropTables(pool, option) {
     logger.silly(`HANDLE_TABLES Environment variable is set to: ${process.env.HANDLE_TABLES}`);
 
     if (option && option === "DROP") {
-        await dropTables(pool, true, false);
+        await dropTables(pool, false);
         // Only exit if script that set environment variable was run
         if (process.env.HANDLE_TABLES === "DROP") {
             logger.info("Exiting...");
             process.exit(0);
         }
     } else if (option && option === "CREATE") {
-        await createTables(pool, true, false);
+        await createTables(pool, false);
         // Only exit if script that set environment variable was run
         if (process.env.HANDLE_TABLES === "CREATE") {
             logger.info("Exiting...");
@@ -23,13 +23,9 @@ async function createOrDropTables(pool, option) {
 }
 
 /* Create Tables */
-async function createTables(pool, create_types, close_pool) {
+async function createTables(pool, close_pool) {
     if (!pool) {
         throw "Must pass pool after calling initializeDatabase";
-    }
-
-    if (create_types) {
-       await createTypes(pool);
     }
 
     /* Create a table using (key, value) pairs of (table_name, table_query) from tables.js
@@ -55,30 +51,26 @@ async function createTables(pool, create_types, close_pool) {
 }
 
 /* Create types */
-async function createTypes(pool) {
-    // Create types before creating tables
-    for await (const type of Object.entries(require("./types.json"))) {
-        let created = true;
-        try {
-            await pool.query(`CREATE TYPE ${type[0]} AS ENUM (${"'" + type[1].join("', '") + "'"})`);
-            // Will be error if already exists
-        } catch (err) {
-            created = false;
-        }
-        if (created) {
-            logger.info(`Type: ${type[0]} created.`);
-        }
-    }
-}
+// async function createTypes(pool) {
+//     // Create types before creating tables
+//     for await (const type of Object.entries(require("./types.json"))) {
+//         let created = true;
+//         try {
+//             await pool.query(`CREATE TYPE ${type[0]} AS ENUM (${"'" + type[1].join("', '") + "'"})`);
+//             // Will be error if already exists
+//         } catch (err) {
+//             created = false;
+//         }
+//         if (created) {
+//             logger.info(`Type: ${type[0]} created.`);
+//         }
+//     }
+// }
 
 /* Drop Tables */
-async function dropTables(pool, drop_types, close_pool) {
+async function dropTables(pool, close_pool) {
     if (!pool) {
         throw "Must pass pool after calling initializeDatabase";
-    }
-
-    if (drop_types) {
-        await drop_types(pool);
     }
 
     /* Drop each table using (key, value) pairs of (table_name, table_query) from tables.js
@@ -104,20 +96,20 @@ async function dropTables(pool, drop_types, close_pool) {
 }
 
 /* Create types */
-async function dropTypes(pool) {
-    for await (const type of Object.entries(require("./types.json"))) {
-        let created = true;
-        try {
-            await pool.query(`DROP TYPE ${type[0]}`);
-            // Will be error if already exists
-        } catch (err) {
-            created = false;
-        }
-        if (created) {
-            logger.info(`Type: ${type[0]} dropped.`);
-        }
-    }
-}
+// async function dropTypes(pool) {
+//     for await (const type of Object.entries(require("./types.json"))) {
+//         let created = true;
+//         try {
+//             await pool.query(`DROP TYPE ${type[0]}`);
+//             // Will be error if already exists
+//         } catch (err) {
+//             created = false;
+//         }
+//         if (created) {
+//             logger.info(`Type: ${type[0]} dropped.`);
+//         }
+//     }
+// }
 
 
 module.exports = {

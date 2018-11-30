@@ -1,4 +1,9 @@
 module.exports = {
+    menu_category: [
+        "egg-specialties",
+        "breakfast-sandwiches",
+        "beverages"
+    ],
     menu: [
         // Egg Specialities
         {

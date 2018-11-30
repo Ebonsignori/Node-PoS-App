@@ -1,4 +1,21 @@
 module.exports = {
+    menu_category: {
+        get:
+            "SELECT * FROM menu_category",
+        get_category:
+            "SELECT * FROM menu_category " +
+            "WHERE menu_category.name = $1",
+        add_category:
+            "INSERT INTO menu(name, modified_date, created_date) " +
+            "VALUES($1, $2, $2) " +
+            "RETURNING *",
+        remove_category:
+            "DELETE FROM menu_category " +
+            "WHERE menu_category.name = $1 " +
+            "RETURNING *",
+        edit_category:
+             "UPDATE menu_category SET name = $1 WHERE menu_category.name = $2"
+    },
     menu: {
         get:
             "SELECT * FROM menu",
@@ -6,7 +23,7 @@ module.exports = {
             "SELECT * FROM menu " +
             "WHERE menu.id = $1",
         add_item:
-            "INSERT INTO menu(item_name, item_price, category, modified_date, created_date) " +
+            "INSERT INTO menu(item_name, item_price, menu_category, modified_date, created_date) " +
             "VALUES($1, $2, $3, $4, $4) " +
             "RETURNING *",
         remove_item:
