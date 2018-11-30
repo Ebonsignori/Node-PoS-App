@@ -10,7 +10,9 @@ const chalk = require("chalk");
 
 let database_created = true;
 before("Database should be created", async function databaseInit() {
-    await require("../app/app")();
+    // Start server
+    await require("../app/app").main();
+
     try {
         // Populate database with test data (templates)
         for await (let menu_item of templates.menu) {
@@ -42,6 +44,8 @@ describe("Testing Database", () => {
 require("./tests/menu");
 
 after("Database should be taken down", async function takeDownDatabase() {
+    console.log("Taking down database");
+
     let database_dropped= true;
 
     try {

@@ -36,7 +36,10 @@ async function main() {
 
 // For testing export main module, otherwise run it
 if (process.env.NODE_ENV === "testing") {
-    module.exports = main;
+    module.exports = {
+        main: main,
+        app: app
+    };
 } else {
     main();
 }

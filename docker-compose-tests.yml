@@ -2,7 +2,7 @@ version: '2'
 
 services:
   backend:
-    command: ["./node_modules/mocha/bin/mocha"]
+    command: ["./node_modules/mocha/bin/mocha", "--full-trace"]
     build:
       context: .
       dockerfile: docker/Dockerfile
