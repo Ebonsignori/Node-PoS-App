@@ -44,8 +44,6 @@ describe("Testing Database", () => {
 require("./tests/menu");
 
 after("Database should be taken down", async function takeDownDatabase() {
-    console.log("Taking down database");
-
     let database_dropped= true;
 
     try {

@@ -7,37 +7,42 @@ module.exports = {
             "WHERE menu.id = $1",
         add_item:
             "INSERT INTO menu(item_name, item_price, category, modified_date, created_date) " +
-            "VALUES($1, $2, $3, $4, $4)",
+            "VALUES($1, $2, $3, $4, $4) " +
+            "RETURNING *",
         remove_item:
-            "DELETE FROM menu" +
-            "WHERE menu.id = $1",
+            "DELETE FROM menu " +
+            "WHERE menu.id = $1 " +
+            "RETURNING *",
+
+        // Build an edit_item query based on which deconstructed arguments are passed in
         edit_item: (id, {
             item_name = undefined,
             item_price = undefined,
             category = undefined,
             modified_date = new Date()
         } = {}) => {
-            let insert_string = "INSERT INTO menu(";
-            let insert_args = [];
+            let update_string = "UPDATE menu SET ";
+            let update_args = [];
             if (item_name) {
-                insert_string += "item_name, ";
-                insert_args.push(item_name)
+                update_args.push(item_name);
+                update_string += `item_name = $${update_args.length}, `;
             }
             if (item_price) {
-                insert_string += "item_price, ";
-                insert_args.push(item_price)
+                update_args.push(item_price);
+                update_string += `item_price = $${update_args.length}, `;
             }
             if (category) {
-                insert_string += "category, "
+                update_args.push(category);
+                update_string += `category = $${update_args.length}, `;
             }
-            insert_args.push(modified_date);
-            insert_string += "modified_date) VALUES(";
-            for (let i = 1; i < insert_args.length; i++) {
-                insert_string += "$" + i;
-            }
-            insert_string += ")";
 
-            return [insert_string, insert_args];
+            // Modified date will always be present, and add id as the last argument
+            update_args.push(modified_date);
+            update_string += `modified_date = $${update_args.length} WHERE menu.id = $${update_args.length + 1} RETURNING *`;
+            update_args.push(id);
+
+
+            return [update_string, update_args];
         }
     },
 };
