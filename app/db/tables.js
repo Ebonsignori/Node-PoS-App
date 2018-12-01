@@ -1,7 +1,7 @@
 module.exports = {
     menu_category:
         `menu_category(
-           name text PRIMARY KEY NOT NULL,
+           name varchar(50) PRIMARY KEY NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
          )`,
@@ -17,12 +17,22 @@ module.exports = {
            created_date TIMESTAMP NOT NULL
          )`,
 
-    sales:
-        `sales(
+    sale:
+        `sale(
            id SERIAL PRIMARY KEY,
            tax integer NOT NULL,
            total integer NOT NULL,
            menu_items json NOT NULL,
+           modified_date TIMESTAMP,
+           created_date TIMESTAMP NOT NULL
+         )`,
+
+    day_summary:
+        `day_summary(
+           id SERIAL PRIMARY KEY,
+           tax integer NOT NULL,
+           total integer NOT NULL,
+           transactions json NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
          )`,
