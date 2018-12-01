@@ -95,7 +95,7 @@ async function getSpecificCategory(req, res) {
 async function editCategory(req, res) {
     // Validate request. (Params contains the menu_category name to be edited and body contains the new menu_category name)
     if (!req.params.category_name || typeof req.params.category_name !== "string"
-        || req.body.category_name || typeof req.body.category_name !== "string" ) {
+        || !req.body.category_name || typeof req.body.category_name !== "string" ) {
         return res.status(400).json({
             error: `Must specify the name of the category you wish you edit as category_name in the request parameter, and the name you wish to change the category to as category_name in the request body`
         });

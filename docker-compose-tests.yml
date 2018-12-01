@@ -22,7 +22,7 @@ services:
       HTTP_PORT: ${HTTP_PORT}
       FORCE_COLOR: ${FORCE_COLOR}
       NODE_ENV: testing
-      LOGGING_LEVEL: silly
+      LOGGING_LEVEL: error
       ALLOWED_ORIGIN: http://localhost:8086 # TODO: Set to postman url
 
   postgres:

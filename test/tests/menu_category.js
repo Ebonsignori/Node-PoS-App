@@ -13,7 +13,7 @@ let new_category = "sides";
 describe('Menu Categories', function Menu() {
     it('should GET all the categories', function getAllCategory(done) {
         chai.request(app)
-            .get('/menu/menu_category')
+            .get('/menu/category')
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.a('array');
@@ -27,14 +27,14 @@ describe('Menu Categories', function Menu() {
             const res = await requester.get('/menu/category/' + category);
             res.should.have.status(200);
             res.body.should.be.a('object');
-            res.body.category_name.should.equal(category);
+            res.body.name.should.equal(category);
         }
     });
 
     it('should POST a new category', async function postNewCategory() {
-        const request = await requester.post("/menu/category").type('form').send(new_category);
+        const request = await requester.post("/menu/category").type('form').send({category_name: new_category});
         request.should.have.status(200);
-        request.body.category_name.should.equal(new_category);
+        request.body.name.should.equal(new_category);
     });
 
     const old_name = "breakfast-sandwiches";
@@ -45,7 +45,7 @@ describe('Menu Categories', function Menu() {
         });
 
         request.should.have.status(200);
-        request.body.category_name.should.equal(new_name);
+        request.body.name.should.equal(new_name);
     });
 
     it('menu items should cascade the category name update of the new category name', async function checkOnCascadeUpdate() {
@@ -58,7 +58,6 @@ describe('Menu Categories', function Menu() {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.id.should.equal(i);
-
                 // Check that the item's category name is the new category name
                 res.body.category.should.equal(new_name);
             }
@@ -70,7 +69,7 @@ describe('Menu Categories', function Menu() {
         // Delete the beverages category
         const request2 = await requester.delete("/menu/category/" + category_to_delete);
         request2.should.have.status(200);
-        request2.body.category_name.should.equal(category_to_delete);
+        request2.body.name.should.equal(category_to_delete);
     });
 
     it("menu items that were referencing the deleted category should now have a NULL category", async function checkOnDeleteNull() {
@@ -85,7 +84,6 @@ describe('Menu Categories', function Menu() {
                 res.body.id.should.equal(i);
 
                 // Check that the item's category name is null
-                console.log(res.body.category);
                 should.not.exist(res.body.category);
             }
         }
