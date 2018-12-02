@@ -22,7 +22,7 @@ module.exports = {
            id SERIAL PRIMARY KEY,
            tax integer NOT NULL,
            total integer NOT NULL,
-           menu_items json NOT NULL,
+           items json NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
          )`,
@@ -32,7 +32,7 @@ module.exports = {
            id SERIAL PRIMARY KEY,
            tax integer NOT NULL,
            total integer NOT NULL,
-           transactions json NOT NULL,
+           items json NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
          )`,

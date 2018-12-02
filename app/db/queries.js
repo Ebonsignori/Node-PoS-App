@@ -17,6 +17,7 @@ module.exports = {
             "UPDATE menu_category SET name = $2 WHERE menu_category.name = $1 " +
             "RETURNING *"
     },
+
     menu: {
         get:
             "SELECT * FROM menu",
@@ -32,7 +33,7 @@ module.exports = {
             "WHERE menu.id = $1 " +
             "RETURNING *",
 
-        // Build an edit_item query based on which deconstructed arguments are passed in
+        // Build an edit query based on which deconstructed arguments are passed in
         edit_item: (id, {
             item_name = undefined,
             item_price = undefined,
@@ -56,11 +57,60 @@ module.exports = {
 
             // Modified date will always be present, and add id as the last argument
             update_args.push(modified_date);
-            update_string += `modified_date = $${update_args.length} WHERE menu.id = $${update_args.length + 1} RETURNING *`;
+            update_string += `modified_date = $${update_args.length} ` +
+                `WHERE menu.id = $${update_args.length + 1} RETURNING *`;
             update_args.push(id);
 
 
             return [update_string, update_args];
         }
     },
+
+    sale: {
+        get:
+            "SELECT * FROM sale " +
+            "WHERE timestamp::date = $1",  // Date must be in ISO-8601 format. i.e. YYYY-MM-DD
+        get_sale:
+            "SELECT * FROM sale " +
+            "WHERE sale.id = $1",
+        new_sale:
+            "INSERT INTO sale(tax, total, items, modified_date, created_date) " +
+            "VALUES($1, $2, $3, $4, $4) " +
+            "RETURNING *",
+        remove_sale:
+            "DELETE FROM sale " +
+            "WHERE sale.id = $1 " +
+            "RETURNING *",
+        // Build the edit query based on which deconstructed arguments are passed in
+        edit_sale: (id, {
+            tax = undefined,
+            total = undefined,
+            items = undefined,
+            modified_date = new Date()
+        } = {}) => {
+            let update_string = "UPDATE sale SET ";
+            let update_args = [];
+            if (tax) {
+                update_args.push(tax);
+                update_string += `tax = $${update_args.length}, `;
+            }
+            if (total) {
+                update_args.push(total);
+                update_string += `total = $${update_args.length}, `;
+            }
+            if (items) {
+                update_args.push(items);
+                update_string += `items = $${update_args.length}, `;
+            }
+
+            // Modified date will always be present, and add id as the last argument
+            update_args.push(modified_date);
+            update_string += `modified_date = $${update_args.length} ` +
+                `WHERE sale.id = $${update_args.length + 1} RETURNING *`;
+            update_args.push(id);
+
+
+            return [update_string, update_args];
+        }
+    }
 };
