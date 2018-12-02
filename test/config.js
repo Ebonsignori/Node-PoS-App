@@ -26,6 +26,13 @@ before("Database should be created", async function databaseInit() {
                 menu_item.item_name, menu_item.item_price, menu_item.category, menu_item.created_date
             ]);
         }
+
+        // Add sales
+        for await (let sale of templates.sale) {
+            await db.query(queries.sale.new_sale, [
+                sale.tax_percent, sale.total, JSON.stringify(sale.items), sale.sale_date
+            ]);
+        }
     } catch (err) {
         console.log(err);
         database_created = false;
@@ -49,6 +56,7 @@ describe("Testing Database", () => {
 /* Load tests here in desired order */
 require("./tests/menu");
 require("./tests/menu_category");
+require("./tests/sale");
 
 after("Database should be taken down", async function takeDownDatabase() {
     let database_dropped= true;

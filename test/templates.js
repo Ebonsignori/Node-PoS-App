@@ -1,9 +1,12 @@
+const utils = require("../app/utility/date");
+
 module.exports = {
     menu_category: [
         "egg-specialties",
         "breakfast-sandwiches",
         "beverages"
     ],
+
     menu: [
         // Egg Specialities
         {
@@ -44,7 +47,47 @@ module.exports = {
             category: "beverages",
             created_date: new Date()
         }
+    ],
 
+    sale: [
+        {
+            tax_percent: "700",
+            total: Math.round((175 * 4 + 225 * 3) * 1.07),
+            items: [
+                {
+                    item_name: "Soft Drinks or Iced Tea",
+                    item_price: "175",
+                    quantity: 4,
+                    created_date: new Date()
+                },
+                {
+                    item_name: "Egg Sandwich",
+                    item_price: "225",
+                    quantity: 3,
+                    created_date: new Date()
+                }
+            ],
+            sale_date: new Date() // Sale made "today"
+        },
+        {
+            tax_percent: "700",
+            total: Math.round((175 * 2 + 275 * 1) * 1.07),
+            items: [
+                {
+                    item_name: "Soft Drinks or Iced Tea",
+                    item_price: "175",
+                    quantity: 2,
+                    created_date: new Date()
+                },
+                {
+                    item_name: "Egg & Cheese Sandwich",
+                    item_price: "275",
+                    quantity: 1,
+                    created_date: new Date()
+                }
+            ],
+            sale_date: utils.daysAgo(2) // Sale made 2 days ago
+        }
     ]
 
 };

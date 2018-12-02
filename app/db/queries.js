@@ -69,12 +69,12 @@ module.exports = {
     sale: {
         get:
             "SELECT * FROM sale " +
-            "WHERE timestamp::date = $1",  // Date must be in ISO-8601 format. i.e. YYYY-MM-DD
+            "WHERE date(created_date) = $1",  // Date must be in ISO-8601 format. i.e. YYYY-MM-DD
         get_sale:
             "SELECT * FROM sale " +
             "WHERE sale.id = $1",
         new_sale:
-            "INSERT INTO sale(tax, total, items, modified_date, created_date) " +
+            "INSERT INTO sale(tax_percent, total, items, modified_date, created_date) " +
             "VALUES($1, $2, $3, $4, $4) " +
             "RETURNING *",
         remove_sale:
@@ -83,15 +83,15 @@ module.exports = {
             "RETURNING *",
         // Build the edit query based on which deconstructed arguments are passed in
         edit_sale: (id, {
-            tax = undefined,
+            tax: tax_percent = undefined,
             total = undefined,
             items = undefined,
             modified_date = new Date()
         } = {}) => {
             let update_string = "UPDATE sale SET ";
             let update_args = [];
-            if (tax) {
-                update_args.push(tax);
+            if (tax_percent) {
+                update_args.push(tax_percent);
                 update_string += `tax = $${update_args.length}, `;
             }
             if (total) {

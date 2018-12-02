@@ -11,12 +11,10 @@ const logger = require("../config/logging");
     Route: "/sales/(optional) date"
     Return sales of an entire (or current) day with the option to specify a specific date. Defaults to past day
  */
-router.get("s/:date*?", returnSales);
+router.get("/:date*?", returnSales);
 
-/*
-    Route: "/sale/:sale_id"
-    RESTfully perform RUD (CRUD without create) operations a specific sale by its id
- */
+//    Route: "/sale/:sale_id"
+//    RESTfully perform RUD (CRUD without create) operations a specific sale by its id
 router.route("/:sale_id", )
     .get(getSpecificSale)
     .put(editSale)
@@ -43,7 +41,7 @@ async function returnSales(req, res) {
     }
 
     try {
-        const results = await db.query(queries.sale.get(req.params.date), [
+        const results = await db.query(queries.sale.get, [
             // If date is present, fetch sales from that day. Otherwise fetch sales from today (new Date() is today)
             req.params.date ?
                 new Date(Date.parse(req.params.date)).toISOString().split('T')[0] :
@@ -59,12 +57,13 @@ async function returnSales(req, res) {
 // Add a new sale
 async function newSale(req, res) {
     // Validate request
-    if (!req.body.tax || !Number.isInteger(Number(req.body.tax))
+    if (!req.body.tax_percent || Number.isNaN(Number(req.body.tax_percent))
         || !req.body.total || !Number.isInteger(Number(req.body.total))
-        || !req.body.items) {
+        || !req.body.items
+        || (req.body.sale_date ? !Date.parse(req.body.sale_date) : false)) {
         return res.status(400).json({error: `You must pass in the following parameters: {
-            tax: integer, // in cents,
             total: integer, // in cents,
+            tax_percent: number, // 2 decimal digits 
             items: [  // Array of items involved in sale
                 {
                    item_name: string
@@ -74,7 +73,8 @@ async function newSale(req, res) {
                 {...},
                 {...},
                 ...
-            ]
+            ],
+            sale_date: (optional) Date() object
         }`});
     }
 
@@ -106,10 +106,10 @@ async function newSale(req, res) {
 
     try {
         const insert_res = await db.query(queries.sale.new_sale, [
-            req.body.tax,
+            req.body.tax_percent,
             req.body.total,
-            req.body.items,
-            new Date()
+            JSON.stringify(req.body.items),
+            req.body.sale_date ? req.body.sale_date : new Date()
         ]);
         if (insert_res && insert_res.rows && insert_res.rows[0]) {
             return res.status(200).json(insert_res.rows[0]);
@@ -186,13 +186,13 @@ async function editSale(req, res) {
         });
     }
 
-    // TODO (feature?): Validate that items equal amount
+    // TODO: Validate that items with tax sum to total
 
     // Generate edit sale item query. Will return array of: [query_string, query_args_array]
     const edit_sale_query = queries.sale.edit_sale(req.params.sale_id, {
-        item_name: req.body.tax ? req.body.tax : undefined,
-        item_price: req.body.total ? req.body.total : undefined,
-        category: req.body.items ? req.body.items : undefined,
+        tax_percent: req.body.tax_percent ? req.body.tax_percent : undefined,
+        total: req.body.total ? req.body.total : undefined,
+        items: req.body.items ? req.body.items : undefined,
     });
 
     try {

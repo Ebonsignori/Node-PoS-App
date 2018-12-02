@@ -20,8 +20,8 @@ module.exports = {
     sale:
         `sale(
            id SERIAL PRIMARY KEY,
-           tax integer NOT NULL,
            total integer NOT NULL,
+           tax_percent integer NOT NULL,
            items json NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
@@ -30,8 +30,8 @@ module.exports = {
     day_summary:
         `day_summary(
            id SERIAL PRIMARY KEY,
-           tax integer NOT NULL,
            total integer NOT NULL,
+           number_of_sale integer NOT NULL,
            items json NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL
