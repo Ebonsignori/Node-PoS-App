@@ -67,50 +67,44 @@ module.exports = {
     },
 
     sale: {
-        get:
-            "SELECT * FROM sale " +
-            "WHERE date(created_date) = $1",  // Date must be in ISO-8601 format. i.e. YYYY-MM-DD
+        // Period must be "on", "before", or "after". Date paramer $1 must be in ISO-8601 format. i.e. YYYY-MM-DD
+        get: (period) => {
+            let query_string =  "SELECT * FROM sale ";
+            let operand;
+
+            switch (period) {
+                case "on":
+                    operand = "=";
+                    break;
+                case "before":
+                    operand = "<";
+                    break;
+                case "after":
+                    operand = ">";
+                    break;
+                default:
+                    throw `Invalid period. Must be "on", "before", or "after".`
+            }
+
+            // Return the query string with the appropriate operand for the desired period
+            return query_string + "WHERE date(created_date) " + operand + " $1"
+        },
         get_sale:
             "SELECT * FROM sale " +
             "WHERE sale.id = $1",
         new_sale:
             "INSERT INTO sale(tax_percent, total, items, modified_date, created_date) " +
-            "VALUES($1, $2, $3, $4, $4) " +
+            "VALUES($1, $2, $3, $4, $5) " +
             "RETURNING *",
         remove_sale:
             "DELETE FROM sale " +
             "WHERE sale.id = $1 " +
             "RETURNING *",
         // Build the edit query based on which deconstructed arguments are passed in
-        edit_sale: (id, {
-            tax: tax_percent = undefined,
-            total = undefined,
-            items = undefined,
-            modified_date = new Date()
-        } = {}) => {
-            let update_string = "UPDATE sale SET ";
-            let update_args = [];
-            if (tax_percent) {
-                update_args.push(tax_percent);
-                update_string += `tax = $${update_args.length}, `;
-            }
-            if (total) {
-                update_args.push(total);
-                update_string += `total = $${update_args.length}, `;
-            }
-            if (items) {
-                update_args.push(items);
-                update_string += `items = $${update_args.length}, `;
-            }
-
-            // Modified date will always be present, and add id as the last argument
-            update_args.push(modified_date);
-            update_string += `modified_date = $${update_args.length} ` +
-                `WHERE sale.id = $${update_args.length + 1} RETURNING *`;
-            update_args.push(id);
-
-
-            return [update_string, update_args];
-        }
+        edit_sale:
+            "UPDATE sale " +
+            "SET tax_percent = $2, total = $3, items = $4, modified_date = $5, created_date = $6 " +
+            "WHERE sale.id = $1 " +
+            "RETURNING *"
     }
 };

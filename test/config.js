@@ -30,7 +30,7 @@ before("Database should be created", async function databaseInit() {
         // Add sales
         for await (let sale of templates.sale) {
             await db.query(queries.sale.new_sale, [
-                sale.tax_percent, sale.total, JSON.stringify(sale.items), sale.sale_date
+                sale.tax_percent, sale.total, JSON.stringify(sale.items), new Date(), sale.sale_date
             ]);
         }
     } catch (err) {
@@ -56,6 +56,7 @@ describe("Testing Database", () => {
 /* Load tests here in desired order */
 require("./tests/menu");
 require("./tests/menu_category");
+require("./tests/sales");
 require("./tests/sale");
 
 after("Database should be taken down", async function takeDownDatabase() {

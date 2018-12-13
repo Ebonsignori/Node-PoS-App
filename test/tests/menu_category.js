@@ -10,7 +10,7 @@ const requester = chai.request(app).keepOpen();
 
 let new_category = "sides";
 
-describe('Menu Categories', function Menu() {
+describe('Menu Categories', function menuCategory() {
     it('should GET all the categories', function getAllCategory(done) {
         chai.request(app)
             .get('/menu/category')
@@ -39,7 +39,7 @@ describe('Menu Categories', function Menu() {
 
     const old_name = "breakfast-sandwiches";
     const new_name = "sandwiches";
-    it('it should use PUT to edit an existing category', async function putEditCategory() {
+    it('should use PUT to edit an existing category', async function putEditCategory() {
         const request = await requester.put("/menu/category/" + old_name).type('form').send({
             category_name: new_name,
         });
@@ -67,9 +67,9 @@ describe('Menu Categories', function Menu() {
     const category_to_delete = "beverages";
     it('should use DELETE to delete an existing category', async function deleteCategory() {
         // Delete the beverages category
-        const request2 = await requester.delete("/menu/category/" + category_to_delete);
-        request2.should.have.status(200);
-        request2.body.name.should.equal(category_to_delete);
+        const request = await requester.delete("/menu/category/" + category_to_delete);
+        request.should.have.status(200);
+        request.body.name.should.equal(category_to_delete);
     });
 
     it("menu items that were referencing the deleted category should now have a NULL category", async function checkOnDeleteNull() {

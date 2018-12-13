@@ -21,7 +21,7 @@ module.exports = {
         `sale(
            id SERIAL PRIMARY KEY,
            total integer NOT NULL,
-           tax_percent integer NOT NULL,
+           tax_percent numeric NOT NULL,
            items json NOT NULL,
            modified_date TIMESTAMP,
            created_date TIMESTAMP NOT NULL

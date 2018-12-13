@@ -19,7 +19,7 @@ let bad_new_item = {
     category: "jewelry",
 };
 
-describe('Menu', function Menu() {
+describe('Menu', function menu() {
     it('should GET all the menu items', function getEntireMenu(done) {
         chai.request(app)
             .get('/menu')
