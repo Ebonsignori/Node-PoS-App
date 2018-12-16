@@ -1,4 +1,4 @@
-const utils = require("../app/utility/date");
+const utils = require("../utility/date");
 
 module.exports = {
     menu_category: [

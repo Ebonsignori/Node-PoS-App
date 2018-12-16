@@ -4,11 +4,13 @@
   "description": "",
   "main": "./app/app.js",
   "scripts": {
-    "start": "node ./app/app.js",
+    "start": "docker-compose up || true",
     "start.dev": "nodemon",
     "start.test": "./node_modules/mocha/bin/mocha",
-    "drop_tables": "docker-compose run -e HANDLE_TABLES=DROP backend",
-    "create_tables": "docker-compose run -e HANDLE_TABLES=CREATE backend",
+    "start.manage": "node ./app/app.js",
+    "drop_tables": "docker-compose --file docker-compose-manage.yml run -e HANDLE_TABLES=DROP backend",
+    "create_tables": "docker-compose --file docker-compose-manage.yml run -e HANDLE_TABLES=CREATE backend",
+    "populate_tables": "docker-compose --file docker-compose-manage.yml run -e HANDLE_TABLES=POPULATE backend",
     "test": "docker-compose -f docker-compose-tests.yml up --abort-on-container-exit"
   },
   "author": "",

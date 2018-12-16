@@ -12,7 +12,11 @@ async function main() {
 
     // If environment variable HANDLE_TABLES is set on program execution, then drop or create tables depending on value
     if (process.env.HANDLE_TABLES) {
-        await table_management.createOrDropTables(pool, process.env.HANDLE_TABLES);
+        if (process.env.HANDLE_TABLES === "POPULATE") {
+            await table_management.populateTables(pool);
+        } else {
+            await table_management.createOrDropTables(pool, process.env.HANDLE_TABLES);
+        }
     }
 
     // Initialize express config

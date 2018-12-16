@@ -19,7 +19,6 @@ before("Database should be created", async function databaseInit() {
         for await (let category of templates.menu_category) {
             await db.query(queries.menu_category.add_category, [category, new Date()]);
         }
-        console.log("Added categories");
         // Then add menu items
         for await (let menu_item of templates.menu) {
             await db.query(queries.menu.add_item, [

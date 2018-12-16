@@ -1,5 +1,5 @@
 const app = require("../../app/app").app;
-const templates = require("../templates.js");
+const templates = require("../../app/config/templates.js");
 const utils = require("../../app/utility/date");
 
 const chai = require('chai');
