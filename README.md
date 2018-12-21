@@ -1,14 +1,16 @@
-# Point of Sale System Backend
-This backend provides a RESTful API to management the data needed by a restaurant's point of sale system. 
+# Point of Sale System
 
-**Supports CRUD operations on the following persistent data:**
-   - Menu items with prices. 
-   - Menu categories to which any menu item may belong. 
-   - Sales of menu items. Includes the total of the sale and the sales tax used to calculate it. 
-   - Day summaries of all sales made in each day.
+Features:
+   - Menu items with categories
+   - Sales of menu items
+   - Day sumaries of all sales made in a day (TODO)
+   
+API reference:
+   - *API* section of the [Server README](./app/server/README.md)
 
 ## Getting Started
-Start here to set up a development environment for the PoS backend. 
+Start here to set up the development environment for the PoS system. 
+
 ### Install Docker and Docker-Compose
 The first step is to install [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/install/) on your OS. If you already have both installed and working, you can skip this step. 
 
@@ -17,69 +19,29 @@ If you are using a Mac and have the [brew package manager](https://brew.sh/), yo
  To test if your set up is correct, try navigating to the parent directory of this repo and run `docker-compose build` followed by `docker-compose up` (for future runs, you should only have to build once). 
   
   If everything worked you should see a series of postgres status messages, then something like this
-  ![What the command line should look like](./dev/imgs/first_run_example.png)
+  ![What the command line should look like](docs/imgs/first_run_example.png)
   
   If you receive an error message related to Docker, try to Google the error while specifying your OS. Using Mac, I ran into the [Couldn't connect to Docker daemon](https://github.com/docker/compose/issues/2180)  error, and then did a bit more troubleshooting after `docker-machine start default` didn't work. Don't lose heart, just keep Googling. After you set up Docker once, it shouldn't need additional tinkering. 
   
-### Starting the backend
+### Starting the client and server
 After successfully getting docker to work, build the backend image once by using `docker-compose build`, then you can run the backend at any time using `docker-compose up` or `npm start`. 
 
-### Initializing the database
-To initialize the database, run `npm run create_tables`. If you want to work with an empty database that is all you need to do. However, if you'd like to initialize the tables with data for testing your environment with, run `npm run populate_tables` to fill each table with the contents found in [templates.js](./app/config/templates.js). 
+### Initializing the server database
+To initialize the database, run `npm run create_tables`. If you want to work with an empty database that is all you need to do. However, if you'd like to initialize the tables with data for testing your environment with, run `npm run populate_tables` to fill each table with the contents found in [templates.js](app/server/src/config/templates.js). 
 
-Feel free to edit the contents of [templates.js](./app/config/templates.js) as needed. Just make sure to enter data that is consistent with the PostgreSQL tables defined in [tables.js](./app/db/tables.js).  
+Feel free to edit the contents of [templates.js](app/server/src/config/templates.js) as needed. Just make sure to enter data that is consistent with the PostgreSQL tables defined in [tables.js](app/server/src/db/tables.js).  
 
 
 ### Interacting with the backend
-You should now have the backend up and running. You can interact with the data by using the endpoints documented in the [API](#api) section of this document.  
+You should now have the backend up and running. You can interact with the data by using the endpoints documented in the *API* section of the [backend document](./app/server/README.md).  
 
-If you are unfamiliar with how to interact with a RESTful API, see [Appendix A: Interacting with the API](#appendix-a-interacting-with-the-api) to learn how to inspect the API using `curl` or how to access it on a frontend using Javascript's `fetch(...)`.
+If you are unfamiliar with how to interact with a RESTful API, see [Appendix A: Interacting with the API](#interacting-with-a-restful-api) to learn how to inspect the API using `curl` or how to access it on a frontend using Javascript's `fetch(...)`.
   
 
-# Reference
+# Tutorials
+This section contains written tutorials and other links/resources that may you find find helpful when developing this system.
 
-## API
-The routes for the API can be found in [app/routes/index.js](./app/routes/index.js). The specific parameters after each route in [index.js](./app/routes/index.js) are imported from the JS files in the same directory. 
-
-Terminology: 
-- **Parameters or Params:** Will refer to the URI endpoints. For instance, to GET a specific menu item by it's ID, you would call `GET "/menu/:id"`, where `:id` is a numeric parameter referring to the specific menu item (i.e. `GET /menu/1`). In this case `:id` is a **param**
-- **Body:** Will refer to the JSON contents passed to the endpoint. For instance, to POST a new menu item, you would call 
-    ```
-    POST "/menu", {
-        item_name: "New item",
-        item_price: 42,
-        category: "beverages"
-    }
-    ```
-    The data sent alongside the POST is the body. In this case, `item_name` belongs to the **body**.
-    
-In summary, `:id` belongs to the **params** and `item_name` belongs to the **body**. 
-
-
-## Local Data Management 
-These are scripts that help developers create, delete, and populate the backend's database to ease development. Each script can be found in the "scrips" key in [package.json](./package.json).  
-
-#### Create Tables
- `npm run create_tables`
-
-Creates each of the tables using the keys in [table_management.js](./app/db/table_management.js). The tables are created in order of dependencies. This means that the *menu_categories* table will be created before the *menu* table to account for the optional foreign key dependency of *menu_category* in each *menu* item.   
-
-#### Remove Tables
- `npm run drop_tables`
-
-Drops each of the tables using the keys in [table_management.js](./app/db/table_management.js). The tables are dropped in reverse order of dependencies.
-
-#### Populate Tables
- `npm run populate_tables`
-
-Populates already-created tables with the data found in [templates.js](./app/config/templates.js). Each top-level key in templates.js must match the table name, and the objects in each of the top-level key's arrays must be consistent with the data expected in each table, as described in [tables.js](./app/db/tables.js). 
-
-**Note:** The templates in the [/app/config/templates.js](./app/config/templates.js) file are separate from the templates used for testing in the [/test/test_templates.js](./test/test_templates.js) file. If you wish to modify the templates in the development environment, modify [/app/config/templates.js](./app/config/templates.js) instead of the test templates. 
-
-# Appendix
-This appendix contains written tutorials and other helpful links/resources.
-
-## Appendix A: Interacting with a RESTful API
+## Interacting with a RESTful API
 Interacting with the API involves sending *(POST)* and receiving *(GET)* JSON documents through specific parameters (URLs/URIs).
 
 There are four HTTP methods that each map to a CRUD (Create, Read, Update, Delete) operation. 
@@ -126,7 +88,7 @@ To make the output of the JSON more readable, you can pipe the output to `json_p
  
  You should get something like this: 
  
- ![Curl GET example](./dev/imgs/curl_get_example.png)
+ ![Curl GET example](docs/imgs/curl_get_example.png)
  
  You can also send other types of HTTP methods, like POST. In this example we will create a new menu item.
  - `curl localhost:3000/menu -X POST -H "Content-Type: application/json" -d '{"item_name": "New item", "item_price": 42, "category": "beverages"}'`

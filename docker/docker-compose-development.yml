@@ -1,9 +1,31 @@
-version: '2'
+version: '3'
 
 services:
-  backend:
-    command: ["npm", "run", "start.dev"]
+  server:
+    build:
+      context: app/server
+      args:
+        install_args: "quiet"
+    command: ["npm", "run", "start.development"]
+    # Only copy volumes in development so that code can't be changed from outside in production
+    volumes:
+      - ./app/server:/usr/src/server
     environment:
       NODE_ENV: development
       LOGGING_LEVEL: silly
-      ALLOWED_ORIGIN: http://localhost:8086
+      ALLOWED_ORIGIN: http://localhost:${CLIENT_HTTP_PORT}
+
+  client:
+    build:
+      context: app/client
+      args:
+        install_args: "quiet"
+    command: ["npm", "run", "start.development"]
+    # Only copy volumes in development so that code can't be changed from outside in production
+    volumes:
+      - ./app/client:/usr/src/client
+    environment:
+      NODE_ENV: development
+
+
+

@@ -1,9 +1,9 @@
-const app = require("../../app/app").app;
-const templates = require("../../app/config/templates");
+const app = require("../../src/app").app;
+const templates = require("../../src/config/templates");
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const should = chai.use(chaiAsPromised).should();
+chai.use(chaiAsPromised).should();
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const requester = chai.request(app).keepOpen();
@@ -13,11 +13,11 @@ let new_item = {
     item_price: "666",
     category: "beverages",
 };
-let bad_new_item = {
-    item_name: "Ring",
-    item_price: "9999",
-    category: "jewelry",
-};
+// let bad_new_item = {
+//     item_name: "Ring",
+//     item_price: "9999",
+//     category: "jewelry",
+// };
 
 describe('Menu', function menu() {
     it('should GET all the menu items', function getEntireMenu(done) {

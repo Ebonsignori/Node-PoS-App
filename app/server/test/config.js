@@ -2,16 +2,16 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised).should();
 
-const db = require("../app/db/index");
-const database_management = require("../app/db/database_management");
-const queries = require("../app/db/queries");
-const templates = require("./templates");
+const db = require("../src/db");
+const database_management = require("../src/db/database_management");
+const queries = require("../src/db/queries");
+const templates = require("./test_templates");
 const chalk = require("chalk");
 
 let database_created = true;
 before("Database should be created", async function databaseInit() {
     // Start server
-    await require("../app/app").main();
+    await require("../src/app").main();
 
     // Populate database with test data (templates)
     try {

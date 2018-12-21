@@ -1,7 +1,5 @@
 const logger = require("../config/logging");
 const tables = require("./tables");
-const util = require('util');
-const db = require("./index");
 const queries = require("./queries");
 const templates = require("../config/templates");
 
@@ -37,7 +35,7 @@ async function createTables(pool, close_pool) {
     for await (const table of Object.entries(tables)) {
         let created = true;
         try {
-            const res = await pool.query(`CREATE TABLE ${table[1]}`);
+            await pool.query(`CREATE TABLE ${table[1]}`);
         // Will be error if already exists
         } catch(err) {
             created = false;
@@ -85,7 +83,7 @@ async function dropTables(pool, close_pool) {
     for (let i = table_keys.length - 1; i >= 0; i--) {
         let dropped = true;
         try {
-            const res = await pool.query(`DROP TABLE ${table_keys[i]}`);
+            await pool.query(`DROP TABLE ${table_keys[i]}`);
         } catch(err) {
             logger.error(err);
             dropped = false;

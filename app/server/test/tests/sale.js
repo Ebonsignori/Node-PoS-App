@@ -1,9 +1,9 @@
-const app = require("../../app/app").app;
-const utils = require("../../app/utility/date");
+const app = require("../../src/app").app;
+const utils = require("../../src/utility/date");
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const should = chai.use(chaiAsPromised).should();
+chai.use(chaiAsPromised).should();
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 const requester = chai.request(app).keepOpen();

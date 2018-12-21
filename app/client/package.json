@@ -1,0 +1,62 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/app.js",
+  "scripts": {
+    "watch": "webpack ./src/app.js --output ./dist/index.min.js --progress --watch --mode development",
+    "rebuild": "webpack ./src/app.js --output ./src/index.min.js",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"Webpack,HTTP-Server\" -c \"cyan.bold,green.bold\"  \"npm run watch\" \"npm run serve\" ",
+    "serve": "http-server ./dist -p 8080 -o --cors",
+    "start.development": "./node_modules/.bin/webpack-dev-server --config ./webpack.config.js",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "Evan Bonsignori",
+  "license": "ISC",
+  "homepage": "https://github.com/Benson-Evan/Frontend#readme",
+  "dependencies": {
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-markdown-renderer": "^1.4.0",
+    "react-modal": "^3.6.1",
+    "react-redux": "^5.1.1",
+    "redux": "^4.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "socket.io-client": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "concurrently": "^3.5.1",
+    "css-loader": "^0.28.11",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "gh-pages": "^1.1.0",
+    "http-server": "^0.11.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "env",
+      "es2015"
+    ],
+    "plugins": [
+      "transform-object-rest-spread",
+      "transform-decorators-legacy"
+    ]
+  }
+}

@@ -1,25 +1,26 @@
-version: '2'
+version: '3'
 
 services:
-  backend:
+  server:
     command: ["./node_modules/mocha/bin/mocha", "--full-trace"]
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: app/server
+      args:
+        install_args: "quiet"
     volumes:
-    - .:/usr/src
+      - ./app/server:/usr/src/server
     ports:
-    - ${HTTP_PORT}:${HTTP_PORT}
+      - ${SERVER_HTTP_PORT}:${SERVER_HTTP_PORT}
     expose:
-    - ${HTTP_PORT}
+      - ${SERVER_HTTP_PORT}
     depends_on:
-    - postgres
+      - postgres
     environment:
       DATABASE_URL: postgres
       POSTGRES_DB: ${POSTGRES_DB_TEST}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      HTTP_PORT: ${HTTP_PORT}
+      HTTP_PORT: ${SERVER_HTTP_PORT}
       FORCE_COLOR: ${FORCE_COLOR}
       NODE_ENV: testing
       LOGGING_LEVEL: error

@@ -1,4 +1,4 @@
-const utils = require("../utility/date");
+const utils = require("../src/utility/date");
 
 module.exports = {
     menu_category: [
@@ -71,7 +71,7 @@ module.exports = {
         },
         {
             tax_percent: .07, // 7%
-            total: Math.round((175 * 2 + 275 * 1) * 1.07),
+            total: Math.round((175 * 2 + 275) * 1.07),
             items: [
                 {
                     item_name: "Soft Drinks or Iced Tea",

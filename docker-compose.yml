@@ -1,16 +1,11 @@
-version: '2'
+version: '3'
 
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    volumes:
-      - .:/usr/src
+  server:
     ports:
-      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${SERVER_HTTP_PORT}:${SERVER_HTTP_PORT}
     expose:
-      - ${HTTP_PORT}
+      - ${SERVER_HTTP_PORT}
     depends_on:
       - postgres
     environment:
@@ -18,8 +13,16 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      HTTP_PORT: ${HTTP_PORT}
+      HTTP_PORT: ${SERVER_HTTP_PORT}
       FORCE_COLOR: ${FORCE_COLOR}
+
+  client:
+    ports:
+      - ${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}
+    expose:
+      - ${CLIENT_HTTP_PORT}
+    environment:
+      HTTP_PORT: ${CLIENT_HTTP_PORT}
 
   postgres:
     image: postgres:10-alpine

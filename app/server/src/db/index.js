@@ -1,6 +1,5 @@
 const { Pool } = require("pg");
 const database_management = require("./database_management");
-const tables = require("./tables");
 const table_management = require("./table_management");
 const logger = require("../config/logging");
 

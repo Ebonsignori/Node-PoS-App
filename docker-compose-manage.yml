@@ -1,17 +1,18 @@
-version: '2'
+version: '3'
 
 services:
-  backend:
+  server:
     command: ["npm", "run", "start.manage"]
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: app/server
+      args:
+        install_args: "quiet"
     volumes:
-      - .:/usr/src
+      - ./app/server:/usr/src/server
     ports:
-      - ${HTTP_PORT}:${HTTP_PORT}
+      - ${SERVER_HTTP_PORT}:${SERVER_HTTP_PORT}
     expose:
-      - ${HTTP_PORT}
+      - ${SERVER_HTTP_PORT}
     depends_on:
       - postgres
     environment:
@@ -19,7 +20,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      HTTP_PORT: ${HTTP_PORT}
+      HTTP_PORT: ${SERVER_HTTP_PORT}
       FORCE_COLOR: ${FORCE_COLOR}
 
 
