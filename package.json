@@ -1,14 +1,14 @@
 {
-  "name": "server",
+  "name": "app",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start": "docker-compose up || true",
-    "drop_tables": "docker-compose --file docker-compose-manage.yml run -e HANDLE_TABLES=DROP server",
-    "create_tables": "docker-compose --file docker-compose-manage.yml run -e HANDLE_TABLES=CREATE server",
-    "populate_tables": "docker-compose --file docker-compose-manage.yml run -e HANDLE_TABLES=POPULATE server",
-    "test": "docker-compose -f docker-compose-tests.yml up --abort-on-container-exit"
+    "drop_tables": "docker-compose --file docker-compose.manage.yml run -e HANDLE_TABLES=DROP server",
+    "create_tables": "docker-compose --file docker-compose.manage.yml run -e HANDLE_TABLES=CREATE server",
+    "populate_tables": "docker-compose --file docker-compose.manage.yml run -e HANDLE_TABLES=POPULATE server",
+    "test": "docker-compose -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "author": "Evan Bonsignori",
   "license": "ISC"

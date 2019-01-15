@@ -12,6 +12,8 @@ services:
       LOGGING_LEVEL: info
       # TODO: Set as production origin
       ALLOWED_ORIGIN
+    volumes:
+      - /usr/src/server/node_modules
 
   client:
     build:

@@ -2,6 +2,7 @@ const { Pool } = require("pg");
 const database_management = require("./database_management");
 const table_management = require("./table_management");
 const logger = require("../config/logging");
+const sleepFor = require("../utility/utility").sleepFor;
 
 let pool;
 
@@ -14,6 +15,23 @@ async function initializeDatabase() {
         password: process.env.POSTGRES_PASSWORD,
         port: 5432,
     };
+
+    logger.info("Initializing db...");
+
+    // const max_attempts = 5;
+    // let attempts = 0;
+    // while (attempts < max_attempts) {
+    //     try {
+    //         console.log("Connecting to database");
+    //         pool = new Pool(connection_params);
+    //         break;
+    //     } catch (e) {
+    //         console.log(`${attempts}/${max_attempts} attempts. Database isn't up or connection failed.
+    //         Error message: ${e}`);
+    //         await sleepFor(3000); // Wait 3 seconds between attempts
+    //     }
+    //     attempts++;
+    // }
 
     // If database doesn't exist, create it and populate it with tables
     try {

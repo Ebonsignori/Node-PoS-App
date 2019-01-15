@@ -71,7 +71,6 @@ after("Database should be taken down", async function takeDownDatabase() {
 
     if (database_dropped) {
         console.log(chalk.red.bold("\n- - - End tests - - -\n"));
-        process.exit(0);
     } else {
         console.log(chalk.yellow("Failed to drop database after tests."));
         console.log(chalk.red.bold("\n- - - End tests - - -\n"));

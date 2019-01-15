@@ -1,19 +1,22 @@
 version: '3'
 
 services:
-  server:
-    command: ["./node_modules/mocha/bin/mocha", "--full-trace"]
+  sut:
+    command: ["mocha", "--full-trace", "--exit"]
     build:
       context: app/server
       args:
-        install_args: "quiet"
+        install_args: quiet
     volumes:
       - ./app/server:/usr/src/server
+      - /usr/src/server/node_modules
     ports:
       - ${SERVER_HTTP_PORT}:${SERVER_HTTP_PORT}
     expose:
       - ${SERVER_HTTP_PORT}
     depends_on:
+      - postgres
+    links:
       - postgres
     environment:
       DATABASE_URL: postgres
@@ -25,6 +28,7 @@ services:
       NODE_ENV: testing
       LOGGING_LEVEL: error
       ALLOWED_ORIGIN: http://localhost:8086 # TODO: Set to postman url
+
 
   postgres:
     image: postgres:10-alpine

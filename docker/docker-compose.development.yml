@@ -10,6 +10,7 @@ services:
     # Only copy volumes in development so that code can't be changed from outside in production
     volumes:
       - ./app/server:/usr/src/server
+      - /usr/src/server/node_modules
     environment:
       NODE_ENV: development
       LOGGING_LEVEL: silly
