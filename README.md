@@ -1,4 +1,5 @@
 # Point of Sale System
+[![Build Status](https://travis-ci.com/Ebonsignori/Node-PoS-App.svg?branch=master)](https://travis-ci.com/Ebonsignori/Node-PoS-App)
 
 Features:
    - Menu items with categories

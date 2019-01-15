@@ -3,13 +3,9 @@ language: node_js
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
-addons:
-  - ssh_known_hosts: 157.230.152.107
-
 before_install:
   # Add DigitalOcean encrypted deployment key
   - bash scripts/install.sh
-
   # Install docker-compose
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
@@ -19,12 +15,14 @@ before_install:
   - docker-compose --version
 
 script:
-  - docker-compose build
-  -
-  # Run tests
-  - docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+  # Build docker containers for tests and run tests
+  - docker-compose -f docker-compose.test.yml up --abort-on-container-exit --build
 
-  # Deploy to remote server
-  - bash scripts/deploy.sh
-
+after_success:
+# Deploy to remote
+deploy:
+  provider: script
+  script: bash scripts/deploy.sh
+  on:
+    branch: master
 
