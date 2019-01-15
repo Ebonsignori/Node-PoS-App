@@ -5,13 +5,13 @@ services:
     build:
       context: ./app/server
       args:
-        - install_args: production
+        - install_args: "production"
     command: ["npm", "run", "start.production"]
     environment:
       NODE_ENV: production
       LOGGING_LEVEL: info
       # TODO: Set as production origin
-      ALLOWED_ORIGIN
+#      ALLOWED_ORIGIN
     volumes:
       - /usr/src/server/node_modules
 
