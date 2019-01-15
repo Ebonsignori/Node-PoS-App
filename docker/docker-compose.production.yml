@@ -5,8 +5,8 @@ services:
     build:
       context: ./app/server
       args:
-        - install_args: "production"
-    command: ["npm", "run", "start.production"]
+        install_args: "production"
+    command: ["./wait-for-it.sh", "postgres:5432", "npm", "run", "start.production"]
     environment:
       NODE_ENV: production
       LOGGING_LEVEL: info
@@ -15,11 +15,12 @@ services:
     volumes:
       - /usr/src/server/node_modules
 
-  client:
-    build:
-      context: ./app/client
-      args:
-        - install_args: production
-    command: ["npm", "run", "start.production"]
-    environment:
-      NODE_ENV: production
+# Client runs on GH-pages in production
+#  client:
+#    build:
+#      context: ./app/client
+#      args:
+#        - install_args: production
+#    command: ["npm", "run", "start.production"]
+#    environment:
+#      NODE_ENV: production

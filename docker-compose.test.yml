@@ -2,7 +2,7 @@ version: '3'
 
 services:
   sut:
-    command: ["./wait-for-it.sh", "postgres:5432", "--", "mocha", "--full-trace", "--exit"]
+    command: ["./wait-for-it.sh", "postgres:5432", "--", "./node_modules/mocha/bin/mocha", "--full-trace", "--exit"]
     build:
       context: app/server
       args:

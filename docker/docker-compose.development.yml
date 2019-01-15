@@ -27,6 +27,11 @@ services:
       - ./app/client:/usr/src/client
     environment:
       NODE_ENV: development
+      HTTP_PORT: ${CLIENT_HTTP_PORT}
+    ports:
+      - ${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}
+    expose:
+      - ${CLIENT_HTTP_PORT}
 
 
 

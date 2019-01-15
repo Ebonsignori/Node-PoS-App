@@ -8,7 +8,7 @@ WORKDIR /usr/src/server
 COPY ./package.json /usr/src/server
 ARG install_args
 RUN npm install --$install_args
-RUN npm install -g mocha
+#RUN npm install -g mocha
 
 COPY . /usr/src/server
 

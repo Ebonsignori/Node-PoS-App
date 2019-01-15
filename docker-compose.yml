@@ -16,14 +16,6 @@ services:
       HTTP_PORT: ${SERVER_HTTP_PORT}
       FORCE_COLOR: ${FORCE_COLOR}
 
-  client:
-    ports:
-      - ${CLIENT_HTTP_PORT}:${CLIENT_HTTP_PORT}
-    expose:
-      - ${CLIENT_HTTP_PORT}
-    environment:
-      HTTP_PORT: ${CLIENT_HTTP_PORT}
-
   postgres:
     image: postgres:10-alpine
     environment:
