@@ -6,7 +6,7 @@ services:
       context: app/server
       args:
         install_args: "quiet"
-    command: ["npm", "run", "start.development"]
+    command: ["./wait-for-it.sh", "postgres:5432", "--", "npm", "run", "start.development"]
     # Only copy volumes in development so that code can't be changed from outside in production
     volumes:
       - ./app/server:/usr/src/server
@@ -25,6 +25,7 @@ services:
     # Only copy volumes in development so that code can't be changed from outside in production
     volumes:
       - ./app/client:/usr/src/client
+      - /usr/src/server/node_modules
     environment:
       NODE_ENV: development
       HTTP_PORT: ${CLIENT_HTTP_PORT}

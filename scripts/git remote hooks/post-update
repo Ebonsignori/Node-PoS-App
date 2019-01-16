@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Checkout master branch (load files)
+git --work-tree=/root/app --git-dir=/root/app/.git  checkout -f master
+# Update docker-compose environment to production
+rm /root/app/.env
+cp /root/app/docker/production.env /root/app/.env
+# Build containers
+cd /root/app && docker-compose down
+docker-compose build
+# Create database tables
+npm run create_tables
+# Run container instances
+docker-compose up -d

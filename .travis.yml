@@ -1,5 +1,6 @@
 language: node_js
-
+node_js:
+  - "node"
 env:
   - DOCKER_COMPOSE_VERSION=1.23.2
 
@@ -17,12 +18,24 @@ before_install:
 script:
   # Build docker containers for tests and run tests
   - docker-compose -f docker-compose.test.yml up --abort-on-container-exit --build
+  # Build frontend for gh-pages deploy
+  - cd app/client && npm install --quiet && npm run build
 
 after_success:
-# Deploy to remote
 deploy:
-  provider: script
-  script: bash scripts/deploy.sh
-  on:
-    branch: master
-
+  # Deploy frontend to github pages
+  - provider: pages
+    skip_cleanup: true
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    target-branch: gh-pages
+    on:
+      branch: master
+    # Only push the built frontend to Github Pages
+    local_dir: app/client/dist
+  # Deploy backend to remote server using a script
+  - provider: script
+    skip_cleanup: true
+    script: cd ../.. && bash scripts/deploy_server.sh
+    on:
+      branch: master

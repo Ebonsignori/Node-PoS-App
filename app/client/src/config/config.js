@@ -1,13 +1,11 @@
-import identifier_json from "./identifier.json"
-
 // ============================================
 // Websocket config
 // ============================================
 export let SERVER_URL;
-if (identifier_json.environ === "local") {
+if (process.env.NODE_ENV === "development") {
     SERVER_URL = "http://localhost:3000";
 } else {
-    SERVER_URL = "TODO";
+    SERVER_URL = "http://157.230.152.107:3000";
 }
 
 export const WEBSOCKET_TIMEOUT = 10000;

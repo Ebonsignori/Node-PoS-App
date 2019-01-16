@@ -6,12 +6,11 @@ services:
       context: ./app/server
       args:
         install_args: "production"
-    command: ["./wait-for-it.sh", "postgres:5432", "npm", "run", "start.production"]
+    command: ["./wait-for-it.sh", "postgres:5432", "--", "npm", "run", "start.production"]
     environment:
       NODE_ENV: production
       LOGGING_LEVEL: info
-      # TODO: Set as production origin
-#      ALLOWED_ORIGIN
+      ALLOWED_ORIGIN: https://ebonsignori.github.io/Node-PoS-App/
     volumes:
       - /usr/src/server/node_modules
 
